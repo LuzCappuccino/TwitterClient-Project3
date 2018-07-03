@@ -1,26 +1,65 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
 public class TimelineActivity extends AppCompatActivity {
     private TwitterClient client;
+    // hook up and create and adapter
+    TweetAdapter tweetAdapter;
+    ArrayList<Tweet> tweetList;
+    RecyclerView rvTweets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+        // find the recycler view
+        rvTweets = (RecyclerView) findViewById(R.id.rvTweet);
+        // init the he array list (our data source)
+        tweetList = new ArrayList<>();
+        // construct the adapeter with the data source
+        tweetAdapter= new TweetAdapter(tweetList);
+        // recyclerview setup (layout manager, se adapter)
+        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        // set adapter
+        rvTweets.setAdapter(tweetAdapter);
+
         client = TwitterApp.getRestClient(getApplicationContext());
         PopulateTimeline();
+    }
+
+    // creating an actiona bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.compose_bt, menu);
+        return true;
+    }
+
+    // click listener for compose button
+    public void onComposeAction(MenuItem mi) {
+        // handle click here
+        Intent compose = new Intent(getApplicationContext(), ComposeActivity.class);
+        startActivity(compose);
     }
 
     private void PopulateTimeline()
@@ -28,12 +67,27 @@ public class TimelineActivity extends AppCompatActivity {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("TwitterCLient", response.toString());
+                // Log.d("TwitterCLient", response.toString());
+                // iterate through the JSON array, for each entry deserialize the object
+                for(int i = 0; i < response.length(); i++){
+                    Tweet tweet = null;
+                    try {
+                        tweet = Tweet.fromJSON(response.getJSONObject(i));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    tweetList.add(tweet);
+                    tweetAdapter.notifyItemInserted(tweetList.size() - 1);
+                }
+                // convert each thing into a tweet model
+                // add that tweet model to our data source
+                // notify the adapter has changed
+
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("TwitterCLient", response.toString());
+                // Log.d("TwitterCLient", response.toString());
             }
 
             @Override
