@@ -2,17 +2,22 @@ package com.codepath.apps.restclienttemplate.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 /**
  * Created by luzcamacho on 7/2/18.
  */
 
+@Parcel
 public class User {
     // list all the attributes and deserialize JSON again
     public String name;
     public long uid;
     public String ScreenName;
     public String profileURL;
+
+    public User() {
+    }
 
     public static User fromJSON(JSONObject jsonObject) throws JSONException {
         User user = new User();

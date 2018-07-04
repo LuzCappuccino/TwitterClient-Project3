@@ -6,9 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.codepath.apps.restclienttemplate.ComposeActivity">
 
-
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/etMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -23,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/etMessage"
+        android:onClick="SubmitClick"
         android:text="Submit" />
 </RelativeLayout>

@@ -48,4 +48,9 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
+    // for parcel
+    implementation 'org.parceler:parceler-api:1.1.6'
+    annotationProcessor 'org.parceler:parceler:1.1.6'
+    // google bullshit???
+    implementation "com.android.support:support-core-utils:23.1"
 }

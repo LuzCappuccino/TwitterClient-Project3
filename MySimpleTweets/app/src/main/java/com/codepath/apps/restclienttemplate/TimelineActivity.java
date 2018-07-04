@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
+import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -15,6 +17,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -26,6 +29,7 @@ public class TimelineActivity extends AppCompatActivity {
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweetList;
     RecyclerView rvTweets;
+    static int rando = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,20 @@ public class TimelineActivity extends AppCompatActivity {
     public void onComposeAction(MenuItem mi) {
         // handle click here
         Intent compose = new Intent(getApplicationContext(), ComposeActivity.class);
-        startActivity(compose);
+        startActivityForResult(compose, rando);
+    }
+
+    // function for interpreting our result
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(rando == requestCode && resultCode == RESULT_OK){
+            Tweet sentTweet = Parcels.unwrap(data.getParcelableExtra(Tweet.class.getSimpleName()));
+            Log.i("Timlineactivity", "we have recieved a tweet");
+            tweetList.add(0, sentTweet);
+            tweetAdapter.notifyItemInserted(0);
+            rvTweets.scrollToPosition(0);
+        }
     }
 
     private void PopulateTimeline()
