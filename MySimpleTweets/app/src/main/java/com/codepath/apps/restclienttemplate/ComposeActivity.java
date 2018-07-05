@@ -53,7 +53,7 @@ public class ComposeActivity extends AppCompatActivity {
                 int msgLen = etMessage.getText().toString().length();
                 int other = charSequence.length();
                 //TODO: come back to char count on this listener
-//                tvCharCount.setText(other);
+                tvCharCount.setText(Integer.toString(other));
             }
 
             @Override

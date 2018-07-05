@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
 import android.os.Parcel;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +31,8 @@ public class TimelineActivity extends AppCompatActivity {
     ArrayList<Tweet> tweetList;
     RecyclerView rvTweets;
     static int rando = 3;
+    // for swipe to refresh stuff
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,45 @@ public class TimelineActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient(getApplicationContext());
         PopulateTimeline();
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+
+        /* set up stuff for our swipe container */
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                /* gameplan: make a new network call to get an updated tweet list, clear the list,
+                * and then populate the recycler view with this */
+                fetchTimelineAsync(0);
+                swipeContainer.setRefreshing(false);
+            }
+
+            private void fetchTimelineAsync(int i) {
+                client.getHomeTimeline(new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        // iterate through the JSON array, for each entry deserialize the object
+                        tweetAdapter.clear();
+                        for(int k = 0; k < response.length(); k++) {
+                            Tweet tweet = null;
+                            try {
+                                tweet = Tweet.fromJSON(response.getJSONObject(k));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            tweetList.add(tweet);
+                            tweetAdapter.notifyItemInserted(tweetList.size() - 1);
+                        }
+                        tweetAdapter.addAll(tweetList);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.d("TimelineActivity", "Fetch timeline error: " + throwable.toString());
+                    }
+                });
+            }
+        });
     }
 
     // creating an actiona bar

@@ -10,7 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.models.GlideApp;
+import com.codepath.apps.restclienttemplate.models.ParseRelativeDate;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -50,6 +53,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         // populate the views according to this data
         holder.tvUsername.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
+        holder.tvTime.setText(ParseRelativeDate.getRelativeTimeAgo(tweet.createdAt));
+        holder.tvScreenName.setText(tweet.user.ScreenName);
         // TODO: put in profile image via glide
         GlideApp.with(context)
             .load(tweet.user.profileURL).into(holder.ivProfileImage);
@@ -61,6 +66,17 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         return myTweets.size();
     }
 
+    /* methods for clearing and adding a new data set */
+    public void clear() {
+        myTweets.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Tweet> newTweets) {
+        myTweets.addAll(newTweets);
+        notifyDataSetChanged();
+    }
+
     // create viewholder class
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -68,6 +84,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public ImageView ivProfileImage;
         public TextView tvUsername;
         public TextView tvBody;
+        public TextView tvScreenName;
+        public TextView tvTime;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -75,6 +93,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
             tvUsername = (TextView) itemView.findViewById(R.id.tvUsername);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
+            tvScreenName = (TextView) itemView.findViewById(R.id.tvScreenName);
+            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
         }
     }
 }

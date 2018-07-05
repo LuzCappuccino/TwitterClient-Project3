@@ -26,6 +26,7 @@ public class User {
         user.uid = jsonObject.getLong("id");
         user.ScreenName = jsonObject.getString("screen_name");
         user.profileURL = jsonObject.getString("profile_image_url");
+        user.ScreenName = "@" + user.ScreenName;
         return user;
     }
 }
