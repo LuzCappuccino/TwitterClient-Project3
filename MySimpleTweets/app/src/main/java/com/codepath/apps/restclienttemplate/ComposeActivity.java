@@ -5,9 +5,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -15,28 +18,54 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
+import org.w3c.dom.Text;
 
 import cz.msebera.android.httpclient.Header;
 
 public class ComposeActivity extends AppCompatActivity {
 
     public EditText etMessage;
+    public TextView tvCharCount;
     public JsonHttpResponseHandler handler;
     public TwitterClient client;
+    public static String tag = "ComposeActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
+        Log.i("ComposeActivity", "We got to this line");
         etMessage = (EditText) findViewById(R.id.etMessage);
+        tvCharCount = (TextView) findViewById(R.id.tvCharCount);
         client = TwitterApp.getRestClient(this);
+
+        Log.i("ComposeActivity", "We got to this line");
+        etMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                int msgLen = etMessage.getText().toString().length();
+                int other = charSequence.length();
+                Log.i(tag, "Printing text length: " + other);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                int msgLen = etMessage.getText().toString().length();
+                int other = charSequence.length();
+                //TODO: come back to char count on this listener
+//                tvCharCount.setText(other);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
     }
 
     public void SubmitClick(View view) {
-        Log.i("ComposeActivity", "Clicked registered");
         String Message = etMessage.getText().toString();
-        Log.i("ComposeActivity", "Message: " + Message);
         client.sendTweet(Message, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -62,8 +91,8 @@ public class ComposeActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 Log.i("ComposeActivity", "Failing");
-
             }
         });
     }
+
 }
