@@ -13,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -27,7 +29,9 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TimelineActivity extends AppCompatActivity {
+import static com.codepath.apps.restclienttemplate.TweetAdapter.context;
+
+public class TimelineActivity extends AppCompatActivity implements TweetAdapter.Callbacks {
     private TwitterClient client;
     // hook up and create and adapter
     TweetAdapter tweetAdapter;
@@ -41,20 +45,17 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
-        /* actionbar stuff */
-        ActionBar bar = getActionBar();
-        String color = "#4AA0EC";
-//        bar.setBackgroundDrawable(new ColorDrawable(Color.RED));
         // find the recycler view
         rvTweets = (RecyclerView) findViewById(R.id.rvTweet);
         // init the he array list (our data source)
         tweetList = new ArrayList<>();
         // construct the adapeter with the data source
-        tweetAdapter= new TweetAdapter(tweetList);
+        tweetAdapter= new TweetAdapter(tweetList, this);
         // recyclerview setup (layout manager, se adapter)
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         // set adapter
         rvTweets.setAdapter(tweetAdapter);
+
 
         client = TwitterApp.getRestClient(getApplicationContext());
         PopulateTimeline();
@@ -172,6 +173,32 @@ public class TimelineActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.d("TwitterCLient", errorResponse.toString());
                 throwable.printStackTrace();
+            }
+        });
+    }
+
+    @Override
+    public void retweet(Tweet atTweet) {
+        Toast.makeText(context, "Retweet clicked", Toast.LENGTH_LONG).show();
+
+        Long uid = atTweet.uid;
+        client.retweetTweet(uid, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.i("TimelineActivity", "Tweet was retweeted :)");
+                Tweet rt = null;
+                try {
+                    rt = Tweet.fromJSON(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                tweetList.add(0, rt);
+                tweetAdapter.notifyItemInserted(0);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("TimelineActivity", "Tweet did not retweet :(");
             }
         });
     }

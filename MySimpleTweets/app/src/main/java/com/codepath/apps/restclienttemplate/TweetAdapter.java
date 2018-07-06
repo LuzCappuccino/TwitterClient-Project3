@@ -18,11 +18,16 @@ import android.widget.Toast;
 import com.codepath.apps.restclienttemplate.models.GlideApp;
 import com.codepath.apps.restclienttemplate.models.ParseRelativeDate;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by luzcamacho on 7/2/18.
@@ -31,10 +36,13 @@ import java.util.List;
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
     // pass in the tweets array
     private static List<Tweet> myTweets;
+    private Callbacks callbacks;
 
-    public TweetAdapter(List<Tweet> tweets){
+    public TweetAdapter(List<Tweet> tweets, Callbacks callbacks) {
         myTweets = tweets;
+        this.callbacks = callbacks;
     }
+
     static Context context;
     // for each row, inflate the layout and cache references into ViewHolder
 
@@ -63,7 +71,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvTime.setText(ParseRelativeDate.getRelativeTimeAgo(tweet.createdAt));
         holder.tvScreenName.setText(tweet.user.ScreenName);
         GlideApp.with(context)
-            .load(tweet.user.profileURL).into(holder.ivProfileImage);
+                .load(tweet.user.profileURL).into(holder.ivProfileImage);
     }
 
     // always necessary
@@ -84,8 +92,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     }
 
     // create viewholder class
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
-    {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // declare all of my views
         public ImageView ivProfileImage;
         public TextView tvUsername;
@@ -105,19 +112,31 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvScreenName = (TextView) itemView.findViewById(R.id.tvScreenName);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
             ibReply = (ImageButton) itemView.findViewById(R.id.ibReply);
+            ibRetweet = (ImageButton) itemView.findViewById(R.id.ibRetweet);
+
+            ibRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   /* make the network call from here */
+                   int position = getAdapterPosition();
+                   Tweet atTweet = myTweets.get(position);
+                    callbacks.retweet(atTweet);
+                }
+            });
 
             ibReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     boolean isCompose = false;
                     int position = getAdapterPosition();
-                    if(position != RecyclerView.NO_POSITION){
+                    if (position != RecyclerView.NO_POSITION) {
+
                         Tweet tweet = myTweets.get(position);
                         Intent intent = new Intent(context, ComposeActivity.class);
                         intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
                         intent.putExtra("bool", isCompose);
 
-                        ( (Activity)context).startActivityForResult(intent, 3);
+                        ((Activity) context).startActivityForResult(intent, 3);
                     }
                 }
             });
@@ -126,12 +145,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
 
 
-
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
             /* do the things */
-            if(position != RecyclerView.NO_POSITION){
+            if (position != RecyclerView.NO_POSITION) {
                 // get the tweet we want
                 Tweet tweet = myTweets.get(position);
                 // initialize the new intent
@@ -141,5 +159,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 context.startActivity(intent);
             }
         }
+    }
+
+    public interface Callbacks {
+
+        void retweet(Tweet atTweet);
     }
 }
