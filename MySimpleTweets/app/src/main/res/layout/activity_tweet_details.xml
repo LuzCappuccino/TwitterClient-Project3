@@ -15,12 +15,11 @@
         app:srcCompat="@android:color/background_dark" />
 
     <TextView
-        android:layout_marginLeft="5dp"
         android:id="@+id/tvDetailsName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/ivDetailsProfilePic"
+        android:layout_alignStart="@+id/tvDetailsBody"
         android:text="TextView"
         android:textSize="18sp" />
 

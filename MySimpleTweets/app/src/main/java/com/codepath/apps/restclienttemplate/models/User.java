@@ -11,9 +11,9 @@ import org.parceler.Parcel;
 @Parcel
 public class User {
     // list all the attributes and deserialize JSON again
-    public String name;
+    public String name; //name
     public long uid;
-    public String ScreenName;
+    public String ScreenName; // the at??
     public String profileURL;
 
     public User() {
