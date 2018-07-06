@@ -69,6 +69,12 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiURL, params, handler);
 	}
 
+	public void retweetTweet(Long replyUserID, AsyncHttpResponseHandler handler) {
+		String apiURL = getApiUrl("statuses/retweet");
+		RequestParams params = new RequestParams();
+
+	}
+
 	// status = tweet as post -> include at in message
 	// params.put("in_reply_to_status_id", )
 

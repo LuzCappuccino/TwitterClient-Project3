@@ -1,6 +1,9 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Parcel;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +41,10 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
-
+        /* actionbar stuff */
+        ActionBar bar = getActionBar();
+        String color = "#4AA0EC";
+//        bar.setBackgroundDrawable(new ColorDrawable(Color.RED));
         // find the recycler view
         rvTweets = (RecyclerView) findViewById(R.id.rvTweet);
         // init the he array list (our data source)

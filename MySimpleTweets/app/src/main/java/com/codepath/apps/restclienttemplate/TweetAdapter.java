@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
@@ -115,7 +116,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         Intent intent = new Intent(context, ComposeActivity.class);
                         intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
                         intent.putExtra("bool", isCompose);
-                        context.startActivity(intent);
+
+                        ( (Activity)context).startActivityForResult(intent, 3);
                     }
                 }
             });
