@@ -70,6 +70,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvBody.setText(tweet.body);
         holder.tvTime.setText(ParseRelativeDate.getRelativeTimeAgo(tweet.createdAt));
         holder.tvScreenName.setText(tweet.user.ScreenName);
+        /* set the thing to be thing */
+        if(tweet.fav){
+            holder.ibLike.setImageResource(R.drawable.heart_pressed);
+        }
+        else{
+            holder.ibLike.setImageResource(R.drawable.heart_unpressed);
+        }
+        if(tweet.retweet){
+            holder.ibRetweet.setImageResource(R.drawable.retweet_pressed);
+        }
+        else{
+            holder.ibRetweet.setImageResource(R.drawable.retweet_unpressed);
+        }
+
         GlideApp.with(context)
                 .load(tweet.user.profileURL).into(holder.ivProfileImage);
     }
@@ -113,6 +127,36 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
             ibReply = (ImageButton) itemView.findViewById(R.id.ibReply);
             ibRetweet = (ImageButton) itemView.findViewById(R.id.ibRetweet);
+            ibLike = (ImageButton) itemView.findViewById(R.id.ibLike);
+
+            ibLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    final Tweet atTweet = myTweets.get(position);
+                    if(position != RecyclerView.NO_POSITION){
+                        Long uid = atTweet.uid;
+                        TwitterClient client = new TwitterClient(context);
+                        client.likeTweet(uid, new JsonHttpResponseHandler(){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                Toast.makeText(context, "Liked tweet!", Toast.LENGTH_LONG).show();
+                                if(atTweet.fav){
+                                    ibLike.setImageResource(R.drawable.heart_unpressed);
+                                }
+                                else{
+                                    ibLike.setImageResource(R.drawable.heart_pressed);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                Log.e("TweetAdapter", "Failed to like tweet :(");
+                            }
+                        });
+                    }
+                }
+            });
 
             ibRetweet.setOnClickListener(new View.OnClickListener() {
                 @Override
