@@ -2,14 +2,17 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.GlideApp;
 import com.codepath.apps.restclienttemplate.models.ParseRelativeDate;
@@ -88,6 +91,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvBody;
         public TextView tvScreenName;
         public TextView tvTime;
+        public ImageButton ibReply;
+        public ImageButton ibLike;
+        public ImageButton ibRetweet;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -97,18 +103,33 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvScreenName = (TextView) itemView.findViewById(R.id.tvScreenName);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+            ibReply = (ImageButton) itemView.findViewById(R.id.ibReply);
+
+            ibReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    boolean isCompose = false;
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION){
+                        Tweet tweet = myTweets.get(position);
+                        Intent intent = new Intent(context, ComposeActivity.class);
+                        intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                        intent.putExtra("bool", isCompose);
+                        context.startActivity(intent);
+                    }
+                }
+            });
             /*need to call for it to actually work*/
             itemView.setOnClickListener(this);
         }
 
 
+
         @Override
         public void onClick(View view) {
-            Log.i("TweetAdapter", "We clicked!!!");
             int position = getAdapterPosition();
             /* do the things */
             if(position != RecyclerView.NO_POSITION){
-                Log.i("TweetAdapter", "we in the thing");
                 // get the tweet we want
                 Tweet tweet = myTweets.get(position);
                 // initialize the new intent

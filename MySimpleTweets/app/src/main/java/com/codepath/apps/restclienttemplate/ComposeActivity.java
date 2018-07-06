@@ -34,25 +34,24 @@ public class ComposeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
+        // let's see what this is
+
         Log.i("ComposeActivity", "We got to this line");
         etMessage = (EditText) findViewById(R.id.etMessage);
         tvCharCount = (TextView) findViewById(R.id.tvCharCount);
         client = TwitterApp.getRestClient(this);
-
         Log.i("ComposeActivity", "We got to this line");
         etMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 int msgLen = etMessage.getText().toString().length();
                 int other = charSequence.length();
-                Log.i(tag, "Printing text length: " + other);
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 int msgLen = etMessage.getText().toString().length();
                 int other = charSequence.length();
-                //TODO: come back to char count on this listener
                 tvCharCount.setText(Integer.toString(other));
             }
 

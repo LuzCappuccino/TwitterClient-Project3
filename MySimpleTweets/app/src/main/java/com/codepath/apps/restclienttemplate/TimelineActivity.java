@@ -105,6 +105,7 @@ public class TimelineActivity extends AppCompatActivity {
     public void onComposeAction(MenuItem mi) {
         // handle click here
         Intent compose = new Intent(getApplicationContext(), ComposeActivity.class);
+        compose.putExtra("code", 10);
         startActivityForResult(compose, rando);
     }
 
