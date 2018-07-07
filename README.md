@@ -47,6 +47,8 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [ ] List anything else that you can get done to improve the app functionality!
+* [x] Retweet and like buttons change between pressed and unpressed depending on whether tweet has been liked or retweeted.
+* [x] Liked tweets are identified when loaded in. Previously liked tweets have their favorite button in a pressed state.
 
 ## Video Walkthrough
 
