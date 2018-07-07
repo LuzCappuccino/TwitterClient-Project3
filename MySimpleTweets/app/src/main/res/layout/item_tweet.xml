@@ -77,4 +77,13 @@
         android:background="#FFF"
         android:src="@drawable/retweet_unpressed" />
 
+    <ImageView
+        android:id="@+id/ivMedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ibRetweet"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        app:srcCompat="@android:color/black" />
+
 </RelativeLayout>

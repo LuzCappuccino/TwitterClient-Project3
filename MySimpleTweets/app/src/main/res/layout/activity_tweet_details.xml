@@ -53,4 +53,14 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/ivDetailsProfilePic"
         android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/ivDetailsMedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDetailsTime"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="36dp"
+        app:srcCompat="@android:color/background_dark" />
 </RelativeLayout>

@@ -84,6 +84,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             holder.ibRetweet.setImageResource(R.drawable.retweet_unpressed);
         }
 
+        if(tweet.fields.media.size() > 0){
+            /* if there is an image to display */
+            Log.i("TweetAdapter", tweet.fields.media.get(0));
+            GlideApp.with(context)
+                    .load(tweet.fields.media.get(0)).into(holder.ivMedia);
+        }
+        else{
+            holder.ivMedia.setVisibility(View.GONE);
+        }
+
         GlideApp.with(context)
                 .load(tweet.user.profileURL).into(holder.ivProfileImage);
     }
@@ -116,6 +126,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public ImageButton ibReply;
         public ImageButton ibLike;
         public ImageButton ibRetweet;
+        public ImageView ivMedia;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -128,6 +139,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ibReply = (ImageButton) itemView.findViewById(R.id.ibReply);
             ibRetweet = (ImageButton) itemView.findViewById(R.id.ibRetweet);
             ibLike = (ImageButton) itemView.findViewById(R.id.ibLike);
+            ivMedia = (ImageView) itemView.findViewById(R.id.ivMedia);
+
 
             ibLike.setOnClickListener(new View.OnClickListener() {
                 @Override

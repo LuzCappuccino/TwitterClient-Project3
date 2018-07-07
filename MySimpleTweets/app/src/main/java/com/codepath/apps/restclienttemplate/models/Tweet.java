@@ -17,6 +17,7 @@ public class Tweet {
     public User user;
     public Boolean fav;
     public Boolean retweet;
+    public entities fields;
 
     public Tweet() {
     }
@@ -31,6 +32,7 @@ public class Tweet {
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
         tweet.retweet = jsonObject.getBoolean("retweeted");
+        tweet.fields = entities.fromjson(jsonObject.getJSONObject("entities"));
 
         return tweet;
     }

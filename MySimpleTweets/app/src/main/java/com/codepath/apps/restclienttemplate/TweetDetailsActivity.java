@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
     public TextView tvDetailsUsername;
     public TextView tvDetailsTime;
     public ImageView ivDetailsProfilePic;
+    public ImageView ivDetailsMedia;
     // our unwrapped tweet
     Tweet viewTweet;
 
@@ -31,6 +33,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
         tvDetailsUsername = (TextView) findViewById(R.id.tvDetailsUsername);
         tvDetailsTime = (TextView) findViewById(R.id.tvDetailsTime);
         ivDetailsProfilePic = (ImageView) findViewById(R.id.ivDetailsProfilePic);
+        ivDetailsMedia = (ImageView) findViewById(R.id.ivDetailsMedia);
 
         // unwrap our tweet from prev activity
         viewTweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
@@ -43,6 +46,15 @@ public class TweetDetailsActivity extends AppCompatActivity {
         GlideApp.with(getApplicationContext())
                 .load(viewTweet.user.profileURL)
                 .into(ivDetailsProfilePic);
+
+        if(viewTweet.fields.media.size() > 0){
+            GlideApp.with(getApplicationContext())
+                    .load(viewTweet.fields.media.get(0))
+                    .into(ivDetailsMedia);
+        }
+        else{
+            ivDetailsMedia.setVisibility(View.GONE);
+        }
 
     }
 }

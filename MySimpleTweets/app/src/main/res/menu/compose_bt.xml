@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        app:showAsAction="always"
         android:id="@+id/ComposeTweet"
+        android:icon="@drawable/compose"
         android:onClick="onComposeAction"
-        android:title="Compose" />
+        android:title="Compose"
+        app:showAsAction="always" />
 </menu>
